@@ -12,7 +12,7 @@ import { UpdateSeasonRequest } from "../models/dto/request/season/UpdateSeasonRe
 
 export class SeasonRouter extends CommonRoutesConfig {
   constructor(app: express.Application) {
-    super(app, "Season", `Seasons`);
+    super(app, "Season", `seasons`);
   }
 
   configureRoutes() {

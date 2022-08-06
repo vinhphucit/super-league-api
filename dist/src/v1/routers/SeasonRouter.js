@@ -14,7 +14,7 @@ const CreateSeasonRequest_1 = require("../models/dto/request/season/CreateSeason
 const UpdateSeasonRequest_1 = require("../models/dto/request/season/UpdateSeasonRequest");
 class SeasonRouter extends CommonRouterConfig_1.CommonRoutesConfig {
     constructor(app) {
-        super(app, "Season", `Seasons`);
+        super(app, "Season", `seasons`);
     }
     configureRoutes() {
         const controller = typedi_1.default.get(SeasonController_1.SeasonController);

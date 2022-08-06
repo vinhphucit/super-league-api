@@ -1,0 +1,400 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "SuperLeague",
+        "version": "1.0.0",
+        "description": "REST API designed to provide season functions for super league",
+        "contact": {
+            "email": "vinhphuc.it@gmail.com",
+            "name": "Phuc Tran"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/league/"
+        },
+        {
+            "url": "https://altitude-league.herokuapp.com/league/"
+        }
+    ],
+    "tags": [
+        {
+            "name": "System",
+            "description": "System APIs"
+        },
+        {
+            "name": "Season",
+            "description": "Season APIs"
+        }
+    ],
+    "paths": {
+        "/health/check": {
+            "get": {
+                "tags": ["System"],
+                "summary": "Health Check",
+                "operationId": "connect",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "metric for detail information"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfull Operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HealthCheck"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/seasons": {
+            "get": {
+                "tags": ["Season"],
+                "summary": "Get Seasons",
+                "operationId": "getSeasons",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "maximum 100",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetSeasonsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": ["Season"],
+                "summary": "Create Season",
+                "operationId": "createSeason",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateSeasonRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Season"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/seasons/{id}": {
+            "get": {
+                "tags": ["Season"],
+                "summary": "Get Season By Id",
+                "operationId": "getSeasonById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Season"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": ["Season"],
+                "summary": "Update Season By Id",
+                "operationId": "updateSeasonById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateSeasonRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Season"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": ["Season"],
+                "summary": "Delete Season",
+                "operationId": "deleteSeasonById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Operation"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "HealthCheck": {
+                "type": "object",
+                "$ref": "#/components/schemas/AppInfo"
+            },
+            "AppInfo": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "EZ Language"
+                    },
+                    "version": {
+                        "type": "string",
+                        "example": "1.0.0"
+                    },
+                    "host": {
+                        "type": "string",
+                        "example": "0.0.0.0"
+                    },
+                    "port": {
+                        "type": "string",
+                        "example": "3000"
+                    },
+                    "env": {
+                        "type": "string",
+                        "example": "dev"
+                    }
+                }
+            },
+            "CreateSeasonRequest": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UpdateSeasonsRequest": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    }
+                }
+            },
+            "GetSeasonsResponse": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/BaseListResponse",
+                        "type": "object",
+                        "properties": {
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Season"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "BaseListResponse": {
+                "type": "object",
+                "properties": {
+                    "limit": {
+                        "type": "number"
+                    },
+                    "start": {
+                        "type": "number"
+                    },
+                    "totalItems": {
+                        "type": "number"
+                    },
+                    "sort": {
+                        "type": "string"
+                    },
+                    "query": {
+                        "type": "string"
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "object"
+                        }
+                    }
+                }
+            },
+            "Season": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "creatorId": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+}

@@ -23,7 +23,7 @@ __decorate([
 ], UpdateSeasonRequest.prototype, "title", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Length)(1, 50),
+    (0, class_validator_1.Length)(1, 500),
     (0, IsNotEmptyString_1.IsNotEmptyString)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)

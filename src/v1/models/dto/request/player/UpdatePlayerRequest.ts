@@ -1,15 +1,20 @@
 import {IsEmail, IsOptional, IsString, Length, MaxLength} from 'class-validator';
 import {IsNotEmptyString} from "../../../../utils/validation/IsNotEmptyString";
 
-export class UpdateSeasonRequest {
+export class UpdatePlayerRequest {
     @IsString()
     @Length(1, 50)
     @IsNotEmptyString()
     @IsOptional()
-    public title: string
+    public firstName: string
     @IsString()
-    @Length(1, 500)
+    @Length(1, 50)
     @IsNotEmptyString()    
     @IsOptional()
-    public description: string
+    public lastName: string
+    @IsString()
+    @Length(1, 50)
+    @IsNotEmptyString()    
+    @IsOptional()
+    public nickname: string
 }

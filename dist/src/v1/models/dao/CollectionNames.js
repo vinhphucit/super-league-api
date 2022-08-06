@@ -9,4 +9,5 @@ class CollectionNames {
 }
 exports.CollectionNames = CollectionNames;
 CollectionNames.Season = "season" + subfix;
+CollectionNames.Player = "player" + subfix;
 //# sourceMappingURL=CollectionNames.js.map

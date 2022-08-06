@@ -14,12 +14,12 @@ export class SeasonService {
   constructor(private readonly repo: SeasonRepository) {}
 
   public async create(
-    Season: CreateSeasonRequest,
+    rq: CreateSeasonRequest,
     userId?: string
   ): Promise<ISeason> {
     let item: Partial<ISeason> = {
-      title: Season.title,
-      description: Season.description,
+      title: rq.title,
+      description: rq.description,
       creatorId: userId,
     };
     return this.repo.create(item);

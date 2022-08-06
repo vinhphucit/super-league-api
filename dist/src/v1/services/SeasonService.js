@@ -27,11 +27,11 @@ let SeasonService = class SeasonService {
     constructor(repo) {
         this.repo = repo;
     }
-    create(Season, userId) {
+    create(rq, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             let item = {
-                title: Season.title,
-                description: Season.description,
+                title: rq.title,
+                description: rq.description,
                 creatorId: userId,
             };
             return this.repo.create(item);

@@ -8,4 +8,5 @@ if (process.env.ENV == "test") {
 
 export class CollectionNames {
   public static Season = "season" + subfix;
+  public static Player = "player" + subfix;
 }

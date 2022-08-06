@@ -13,7 +13,7 @@ if (!process.env.ENV || process.env.ENV === 'test') {
 
 export const env = {
     app: {
-        name: 'EZ-Lang-Flashcard',
+        name: 'SuperLeague',
         version: (pkg as any).version,
         host: getOsEnv('HOST'),
         port: getOsEnv('PORT'),

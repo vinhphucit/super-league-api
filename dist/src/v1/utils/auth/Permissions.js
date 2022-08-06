@@ -8,6 +8,13 @@ exports.Permissions = {
         ReadById: "ss:rid",
         UpdateById: "ss:uid",
         DeleteById: "s:did",
+    },
+    Player: {
+        Create: "ss:c",
+        Read: "ss:r",
+        ReadById: "ss:rid",
+        UpdateById: "ss:uid",
+        DeleteById: "s:did",
     }
 };
 //# sourceMappingURL=Permissions.js.map

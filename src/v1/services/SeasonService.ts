@@ -4,8 +4,8 @@ import { Service } from "typedi";
 import { BaseList } from "../models/dao/BaseList";
 import { ISeason } from "../models/dao/Season";
 
-import { CreateSeasonRequest } from "../models/dto/request/Season/CreateSeasonRequest";
-import { UpdateSeasonRequest } from "../models/dto/request/Season/UpdateSeasonRequest";
+import { CreateSeasonRequest } from "../models/dto/request/season/CreateSeasonRequest";
+import { UpdateSeasonRequest } from "../models/dto/request/season/UpdateSeasonRequest";
 import { SeasonRepository } from "../repositories/SeasonRepository";
 import { switchNull } from "../utils/StringUtils";
 

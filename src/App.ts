@@ -17,6 +17,7 @@ import { NotFoundRouter } from "./v1/routers/NotFoundRouter";
 import { SeasonRouter } from "./v1/routers/SeasonRouter";
 import { PlayerRouter } from "./v1/routers/PlayerRouter";
 import {glob} from "glob";
+import { MatchRouter } from "./v1/routers/MatchRouter";
 
 export class App {
   public app: Application = express();
@@ -59,6 +60,7 @@ export class App {
       new HealthCheckRouter(this.app),
       new SeasonRouter(this.app),
       new PlayerRouter(this.app),
+      new MatchRouter(this.app),      
       new NotFoundRouter(this.app)
     );
   }

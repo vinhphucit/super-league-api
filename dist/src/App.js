@@ -42,6 +42,7 @@ const NotFoundRouter_1 = require("./v1/routers/NotFoundRouter");
 const SeasonRouter_1 = require("./v1/routers/SeasonRouter");
 const PlayerRouter_1 = require("./v1/routers/PlayerRouter");
 const glob_1 = require("glob");
+const MatchRouter_1 = require("./v1/routers/MatchRouter");
 class App {
     // const debugLog: debug.IDebugger = debug('app');
     constructor() {
@@ -76,7 +77,7 @@ class App {
         this.app.use(new ResFormaterMiddleware_1.ResFormaterMiddleware().handleResponse);
     }
     initializeRouters() {
-        this.routes.push(new SwaggerRouter_1.SwaggerRouter(this.app), new HealthCheckRouter_1.HealthCheckRouter(this.app), new SeasonRouter_1.SeasonRouter(this.app), new PlayerRouter_1.PlayerRouter(this.app), new NotFoundRouter_1.NotFoundRouter(this.app));
+        this.routes.push(new SwaggerRouter_1.SwaggerRouter(this.app), new HealthCheckRouter_1.HealthCheckRouter(this.app), new SeasonRouter_1.SeasonRouter(this.app), new PlayerRouter_1.PlayerRouter(this.app), new MatchRouter_1.MatchRouter(this.app), new NotFoundRouter_1.NotFoundRouter(this.app));
     }
     initializeHandlingRequest() {
         this.app.use(new ReqFormaterMiddleware_1.ReqFormaterMiddleware().handleRequest);

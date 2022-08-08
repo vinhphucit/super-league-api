@@ -14,6 +14,9 @@ import { SubMatchService } from "./SubMatchService";
 import { EventDispatcher } from "event-dispatch";
 import Events from "../subscribers/Events";
 import { SubMatchAddedArgument } from "../subscribers/arguments/SubMatchAddedArgument";
+import { UpdateSubMatchRequest } from "../models/dto/request/submatch/UpdateSubMatchRequest";
+import { SubMatchUpdatedArgument } from "../subscribers/arguments/SubMatchUpdatedArgument";
+import { SubMatchRemovedArgument } from "../subscribers/arguments/SubMatchRemovedArgument";
 
 @Service()
 export class MatchService {
@@ -71,8 +74,69 @@ export class MatchService {
     var updatedMatch = await this.repo.updateById(matchId, foundMatch);
 
     new EventDispatcher().dispatch(
-      Events.standing.subMatchAdded,
+      Events.standing.subMatchUpdated,
       new SubMatchAddedArgument(foundMatch, updatedMatch)
+    );
+
+    return updatedMatch;
+  }
+
+  public async updateSubMatch(
+    matchId: string,
+    subMatchId: string,
+    rq: UpdateSubMatchRequest
+  ): Promise<IMatch> {
+    var foundMatch = await this.getById(matchId);
+    const foundSubMatch = foundMatch.subMatches.find(
+      (value) => value.id === subMatchId
+    );
+    if (foundSubMatch == null)
+      throw new BadRequestException(`This match doesn't contain submatch`);
+
+    const updatedSubMatch = await this.subMatchService.updateById(
+      subMatchId,
+      rq
+    );
+
+    const oldMatch = { ...foundMatch } as IMatch;
+    for (var sm of foundMatch.subMatches) {
+      if (sm.id === subMatchId) {
+        sm = updatedSubMatch;
+      }
+    }
+    var updatedMatch = await this.repo.updateById(matchId, foundMatch);
+
+    new EventDispatcher().dispatch(
+      Events.standing.subMatchUpdated,
+      new SubMatchUpdatedArgument(oldMatch, updatedSubMatch)
+    );
+
+    return updatedMatch;
+  }
+
+  public async deleteSubMatch(
+    matchId: string,
+    subMatchId: string
+  ): Promise<IMatch> {
+    var foundMatch = await this.getById(matchId);
+    const foundSubMatch = foundMatch.subMatches.find(
+      (value) => value.id === subMatchId
+    );
+    if (foundSubMatch == null)
+      throw new BadRequestException(`This match doesn't contain submatch`);
+
+    const oldMatch = { ...foundMatch } as IMatch;
+    foundMatch.subMatches = foundMatch.subMatches.filter(
+      (value) => value.id !== subMatchId
+    );
+    
+    const updatedSubMatch = await this.subMatchService.deleteById(subMatchId);
+
+    var updatedMatch = await this.repo.updateById(matchId, foundMatch);
+
+    new EventDispatcher().dispatch(
+      Events.standing.subMatchRemoved,
+      new SubMatchRemovedArgument(oldMatch, updatedSubMatch)
     );
 
     return updatedMatch;

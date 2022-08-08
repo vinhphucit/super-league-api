@@ -19,7 +19,6 @@ export class SubMatchService {
     match: IMatch,
     rq: CreateSubMatchRequest
   ): Promise<ISubMatch> {
-
     const home: Partial<ISubMatchTeamStatistics> = {
       player: match.homePlayer,
       team: rq.home.team,
@@ -56,7 +55,26 @@ export class SubMatchService {
     if (!result) throw new NotFoundException(`SubMatch ${id} doesn't exist`);
     return result;
   }
-  
+  async updateById(
+    id: string,
+    rq: UpdateSubMatchRequest
+  ): Promise<ISubMatch | undefined> {
+    const entity = await this.getById(id);
+    if (rq.home != null) {
+      entity.home.team = switchNull(rq.home.team, entity.home.team);
+      entity.home.goal = switchNull(rq.home.goal, entity.home.goal);
+      entity.home.redCard = switchNull(rq.home.goal, entity.home.redCard);
+    }
+
+    if (rq.away != null) {
+      entity.away.team = switchNull(rq.away.team, entity.away.team);
+      entity.away.goal = switchNull(rq.away.goal, entity.away.goal);
+      entity.away.redCard = switchNull(rq.away.goal, entity.away.redCard);
+    }
+ 
+    return await this.repo.updateById(id, entity);
+  }
+
   async deleteById(id: string): Promise<ISubMatch> {
     await this.getById(id);
     return this.repo.removeById(id);

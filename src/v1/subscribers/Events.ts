@@ -6,6 +6,8 @@ const prefix = `${path
 export default {
   standing: {
     subMatchAdded: `${prefix}onSubMatchAdded`,
+    subMatchUpdated: `${prefix}subMatchUpdated`,
+    subMatchRemoved: `${prefix}subMatchRemoved`,
     init: `${prefix}onStandingInit`,
   },
 };

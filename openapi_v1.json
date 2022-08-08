@@ -822,6 +822,103 @@
           }
         ]
       }
+    },
+    "/matches/{id}/subMatches/{subMatchId}": {
+      "put": {
+        "tags": ["Match"],
+        "summary": "Update SubMatch to Match By Id",
+        "operationId": "UpdateSubMatch",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subMatchId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubMatchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Match"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Match"],
+        "summary": "Delete SubMatch to Match By Id",
+        "operationId": "DeleteSubMatch",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "subMatchId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],       
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Match"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -972,6 +1069,17 @@
         }
       },
       "CreateSubMatchRequest": {
+        "type": "object",
+        "properties": {
+          "home": {
+            "$ref": "#/components/schemas/SubMatchTeamStatisticsRequest"
+          },
+          "away": {
+            "$ref": "#/components/schemas/SubMatchTeamStatisticsRequest"
+          }
+        }
+      },
+      "UpdateSubMatchRequest": {
         "type": "object",
         "properties": {
           "home": {

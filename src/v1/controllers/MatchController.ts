@@ -15,6 +15,7 @@ import { MatchService } from "../services/MatchService";
 import { GetMatchesResponse } from "../models/dto/response/match/GetMatchesResponse";
 import { GetMatchByIdResponse } from "../models/dto/response/match/GetMatchByIdResponse";
 import { CreateSubMatchRequest } from "../models/dto/request/submatch/CreateSubMatchRequest";
+import { UpdateSubMatchRequest } from "../models/dto/request/submatch/UpdateSubMatchRequest";
 
 
 @Service()
@@ -60,6 +61,30 @@ export class MatchController {
       const request: CreateSubMatchRequest = req.body;
       const id = req.params.id;
       const result = await this.service.createSubMatch(id, request);
+      next(new SuccessResponse(new GetMatchByIdResponse(result)));
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  public async updateSubMatch(req: Request, res: Response, next: NextFunction) {
+    try {
+      const request: UpdateSubMatchRequest = req.body;
+      const id = req.params.id;
+      const subMatchId = req.params.subMatchId;
+      const result = await this.service.updateSubMatch(id,subMatchId, request);
+      next(new SuccessResponse(new GetMatchByIdResponse(result)));
+    } catch (e) {
+      return next(e);
+    }
+  }
+
+  public async deleteSubMatch(req: Request, res: Response, next: NextFunction) {
+    try {
+      
+      const id = req.params.id;
+      const subMatchId = req.params.subMatchId;
+      const result = await this.service.deleteSubMatch(id, subMatchId);
       next(new SuccessResponse(new GetMatchByIdResponse(result)));
     } catch (e) {
       return next(e);

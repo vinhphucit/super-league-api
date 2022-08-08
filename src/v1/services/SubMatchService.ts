@@ -21,11 +21,13 @@ export class SubMatchService {
   ): Promise<ISubMatch> {
 
     const home: Partial<ISubMatchTeamStatistics> = {
+      player: match.homePlayer,
       team: rq.home.team,
       goal: rq.home.goal,
       redCard: rq.home.redCard,
     };
     const away: Partial<ISubMatchTeamStatistics> = {
+      player: match.awayPlayer,
       team: rq.away.team,
       goal: rq.away.goal,
       redCard: rq.away.redCard,

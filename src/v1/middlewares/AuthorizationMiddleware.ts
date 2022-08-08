@@ -15,17 +15,17 @@ export function AuthorizationMiddleware(requiredPermission: string): RequestHand
         try {
             
             
-            const {payload} = req;
+            // const {payload} = req;
             
-            let payloadPermissions: string[];
+            // let payloadPermissions: string[];
 
-            if (payload) {
-                payloadPermissions = payload.permissions;
-            }
+            // if (payload) {
+            //     payloadPermissions = payload.permissions;
+            // }
             
-            if (!verifyPermissions(requiredPermission, payloadPermissions)) {
-                throw new BadRequestException("You don't have permission for this api")
-            }
+            // if (!verifyPermissions(requiredPermission, payloadPermissions)) {
+            //     throw new BadRequestException("You don't have permission for this api")
+            // }
 
             next()
         } catch (ex) {

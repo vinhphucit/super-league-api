@@ -14,19 +14,19 @@ export function AuthenticationMiddleware(): RequestHandler {
 
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
-            let token = req.headers.authorization;
-            if (!token) {
-                return next(new BadRequestException("Missing Access Token"));
-            }
+            // let token = req.headers.authorization;
+            // if (!token) {
+            //     return next(new BadRequestException("Missing Access Token"));
+            // }
 
-            if (token.startsWith(HEADER_AUTHORIZATION_BEARER)) {
-                // Remove Bearer from string
-                token = token.slice(HEADER_AUTHORIZATION_BEARER.length + 1, token.length).trimStart()
-            } else {
-                return next(new BadRequestException("Invalid Access Token"));
-            }
+            // if (token.startsWith(HEADER_AUTHORIZATION_BEARER)) {
+            //     // Remove Bearer from string
+            //     token = token.slice(HEADER_AUTHORIZATION_BEARER.length + 1, token.length).trimStart()
+            // } else {
+            //     return next(new BadRequestException("Invalid Access Token"));
+            // }
 
-            req.payload = await JwtUtils.verifyJwtToken(token)
+            // req.payload = await JwtUtils.verifyJwtToken(token)
             next();
         } catch (ex) {
             return next(ex)

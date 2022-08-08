@@ -10,4 +10,7 @@ class CollectionNames {
 exports.CollectionNames = CollectionNames;
 CollectionNames.Season = "season" + subfix;
 CollectionNames.Player = "player" + subfix;
+CollectionNames.Match = "match" + subfix;
+CollectionNames.SubMatch = "sub_match" + subfix;
+CollectionNames.Standing = "standing" + subfix;
 //# sourceMappingURL=CollectionNames.js.map

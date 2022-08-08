@@ -26,5 +26,10 @@ __decorate([
     (0, IsNotEmptyString_1.IsNotEmptyString)(),
     __metadata("design:type", String)
 ], CreateSeasonRequest.prototype, "description", void 0);
+__decorate([
+    (0, class_validator_1.IsString)({ each: true }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Array)
+], CreateSeasonRequest.prototype, "playerIds", void 0);
 exports.CreateSeasonRequest = CreateSeasonRequest;
 //# sourceMappingURL=CreateSeasonRequest.js.map

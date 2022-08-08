@@ -41,6 +41,7 @@ const HealthCheckRouter_1 = require("./v1/routers/HealthCheckRouter");
 const NotFoundRouter_1 = require("./v1/routers/NotFoundRouter");
 const SeasonRouter_1 = require("./v1/routers/SeasonRouter");
 const PlayerRouter_1 = require("./v1/routers/PlayerRouter");
+const glob_1 = require("glob");
 class App {
     // const debugLog: debug.IDebugger = debug('app');
     constructor() {
@@ -62,7 +63,14 @@ class App {
         });
     }
     initializeEventDispatch() {
-        // throw new Error("Method not implemented.");
+        const patterns = Env_1.env.subscriber;
+        patterns.forEach((pattern) => {
+            (0, glob_1.glob)(pattern, (err, files) => {
+                for (const file of files) {
+                    require(file);
+                }
+            });
+        });
     }
     initializeHandlingResponse() {
         this.app.use(new ResFormaterMiddleware_1.ResFormaterMiddleware().handleResponse);

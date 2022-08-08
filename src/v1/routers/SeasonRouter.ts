@@ -9,6 +9,8 @@ import { AuthenticationMiddleware } from "../middlewares/AuthenticationMiddlewar
 import { ValidationMiddleware } from "../middlewares/ValidationMiddleware";
 import { CreateSeasonRequest } from "../models/dto/request/season/CreateSeasonRequest";
 import { UpdateSeasonRequest } from "../models/dto/request/season/UpdateSeasonRequest";
+import { UpdateSeasonPlayersRequest } from "../models/dto/request/season/UpdateSeasonPlayersRequest";
+import { UpdateSeasonStatusRequest } from "../models/dto/request/season/UpdateSeasonStatusRequest";
 
 export class SeasonRouter extends CommonRoutesConfig {
   constructor(app: express.Application) {
@@ -30,8 +32,7 @@ export class SeasonRouter extends CommonRoutesConfig {
       controller.create.bind(controller)
     );
     this.router.get(
-      `/:id`,
-      // AuthorizationMiddleware(Permissions.Season.ReadById),      
+      `/:id`, 
       controller.getById.bind(controller)
     );
     this.router.put(
@@ -44,6 +45,26 @@ export class SeasonRouter extends CommonRoutesConfig {
       `/:id`,
       AuthorizationMiddleware(Permissions.Season.DeleteById),
       controller.deleteById.bind(controller)
+    );
+    this.router.get(
+      `/:id/matches`, 
+      controller.getMatchesById.bind(controller)
+    );
+    this.router.get(
+      `/:id/standing`,
+      controller.getBySeasonId.bind(controller)
+    );
+    this.router.put(
+      `/:id/players`,
+      AuthorizationMiddleware(Permissions.Season.AddPlayers),
+      ValidationMiddleware(UpdateSeasonPlayersRequest),
+      controller.updatePlayersById.bind(controller)
+    );
+    this.router.put(
+      `/:id/status`,
+      AuthorizationMiddleware(Permissions.Season.UpdateStatus),
+      ValidationMiddleware(UpdateSeasonStatusRequest),
+      controller.changeStatusById.bind(controller)
     );
   }
 }

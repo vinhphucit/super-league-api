@@ -10,4 +10,7 @@ export class CreateSeasonRequest {
     @Length(1, 500)
     @IsNotEmptyString()    
     public description: string
+    @IsString({each:true}) 
+    @IsOptional()
+    public playerIds: string[]
 }

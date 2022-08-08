@@ -10,8 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthenticationMiddleware = void 0;
-const BadRequestException_1 = require("../../base/exceptions/BadRequestException");
-const JwtUtils_1 = require("../utils/auth/JwtUtils");
 // https://stackoverflow.com/questions/45986594/this-is-undefined-in-express-js-router/45987714
 /**
  *
@@ -21,18 +19,17 @@ function AuthenticationMiddleware() {
     const HEADER_AUTHORIZATION_BEARER = "Bearer";
     return (req, res, next) => __awaiter(this, void 0, void 0, function* () {
         try {
-            let token = req.headers.authorization;
-            if (!token) {
-                return next(new BadRequestException_1.BadRequestException("Missing Access Token"));
-            }
-            if (token.startsWith(HEADER_AUTHORIZATION_BEARER)) {
-                // Remove Bearer from string
-                token = token.slice(HEADER_AUTHORIZATION_BEARER.length + 1, token.length).trimStart();
-            }
-            else {
-                return next(new BadRequestException_1.BadRequestException("Invalid Access Token"));
-            }
-            req.payload = yield JwtUtils_1.JwtUtils.verifyJwtToken(token);
+            // let token = req.headers.authorization;
+            // if (!token) {
+            //     return next(new BadRequestException("Missing Access Token"));
+            // }
+            // if (token.startsWith(HEADER_AUTHORIZATION_BEARER)) {
+            //     // Remove Bearer from string
+            //     token = token.slice(HEADER_AUTHORIZATION_BEARER.length + 1, token.length).trimStart()
+            // } else {
+            //     return next(new BadRequestException("Invalid Access Token"));
+            // }
+            // req.payload = await JwtUtils.verifyJwtToken(token)
             next();
         }
         catch (ex) {

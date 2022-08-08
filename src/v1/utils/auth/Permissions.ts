@@ -4,13 +4,15 @@ export const Permissions = {
         Read: "ss:r",
         ReadById: "ss:rid",
         UpdateById: "ss:uid",
-        DeleteById: "s:did",
+        DeleteById: "ss:did",
+        AddPlayers: "ss:ap",
+        UpdateStatus: "ss:us",
     },
     Player: {
-        Create: "ss:c",
-        Read: "ss:r",
-        ReadById: "ss:rid",
-        UpdateById: "ss:uid",
-        DeleteById: "s:did",
+        Create: "pl:c",
+        Read: "pl:r",
+        ReadById: "pl:rid",
+        UpdateById: "pl:uid",
+        DeleteById: "pl:did",
     }
 }

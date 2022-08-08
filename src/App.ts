@@ -16,6 +16,7 @@ import { NotFoundRouter } from "./v1/routers/NotFoundRouter";
 
 import { SeasonRouter } from "./v1/routers/SeasonRouter";
 import { PlayerRouter } from "./v1/routers/PlayerRouter";
+import {glob} from "glob";
 
 export class App {
   public app: Application = express();
@@ -40,7 +41,14 @@ export class App {
     });
   }
   initializeEventDispatch() {
-    // throw new Error("Method not implemented.");
+    const patterns = env.subscriber;
+    patterns.forEach((pattern) => {
+        glob(pattern, (err: any, files: string[]) => {
+            for (const file of files) {
+                require(file);
+            }
+        });
+    });
   }
   initializeHandlingResponse() {
     this.app.use(new ResFormaterMiddleware().handleResponse);

@@ -24,7 +24,7 @@ export class PlayerService {
         `Nickname ${rq.nickname} is not available`
       );
     }
-    
+
     let item: Partial<IPlayer> = {
       firstName: rq.firstName,
       lastName: rq.lastName,
@@ -42,7 +42,10 @@ export class PlayerService {
     if (!result || result.totalItems == 0) return undefined;
     return result.items[0];
   }
-
+  async getByIds(ids: string[]): Promise<IPlayer[] | undefined> {
+    return await this.repo.getByIds(ids);
+  
+  }
   async get(
     limit: string,
     start: string,

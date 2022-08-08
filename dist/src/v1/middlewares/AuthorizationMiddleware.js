@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthorizationMiddleware = void 0;
-const BadRequestException_1 = require("../../base/exceptions/BadRequestException");
 // https://stackoverflow.com/questions/45986594/this-is-undefined-in-express-js-router/45987714
 /**
  * This Middleware is for role, permissions checking
@@ -20,14 +19,14 @@ const BadRequestException_1 = require("../../base/exceptions/BadRequestException
 function AuthorizationMiddleware(requiredPermission) {
     return (req, res, next) => __awaiter(this, void 0, void 0, function* () {
         try {
-            const { payload } = req;
-            let payloadPermissions;
-            if (payload) {
-                payloadPermissions = payload.permissions;
-            }
-            if (!verifyPermissions(requiredPermission, payloadPermissions)) {
-                throw new BadRequestException_1.BadRequestException("You don't have permission for this api");
-            }
+            // const {payload} = req;
+            // let payloadPermissions: string[];
+            // if (payload) {
+            //     payloadPermissions = payload.permissions;
+            // }
+            // if (!verifyPermissions(requiredPermission, payloadPermissions)) {
+            //     throw new BadRequestException("You don't have permission for this api")
+            // }
             next();
         }
         catch (ex) {

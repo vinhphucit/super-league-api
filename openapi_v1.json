@@ -29,6 +29,10 @@
     {
       "name": "Player",
       "description": "Player APIs"
+    },
+    {
+      "name": "Match",
+      "description": "Match APIs"
     }
   ],
   "paths": {
@@ -269,6 +273,206 @@
         ]
       }
     },
+    "/seasons/{id}/players": {
+      "put": {
+        "tags": ["Season"],
+        "summary": "Add players for the Season",
+        "operationId": "addPlayerToSeason",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSeasonPlayersRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Season"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/seasons/{id}/status": {
+      "put": {
+        "tags": ["Season"],
+        "summary": "Change status of  the Season",
+        "operationId": "updateSeasonStatusById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSeasonStatusRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Season"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/seasons/{id}/matches": {
+      "get": {
+        "tags": ["Season"],
+        "summary": "Get Matches",
+        "operationId": "getMatchesBySeasonId",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "maximum 100",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMatchesResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/seasons/{id}/standing": {
+      "get": {
+        "tags": ["Season"],
+        "summary": "Get Standing",
+        "operationId": "getStandingBySeasonId",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Standing"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/players": {
       "get": {
         "tags": ["Player"],
@@ -473,6 +677,151 @@
           }
         ]
       }
+    },
+    "/matches": {
+      "get": {
+        "tags": ["Match"],
+        "summary": "Get Matches",
+        "operationId": "getMatches",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "maximum 100",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMatchesResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/matches/{id}": {
+      "get": {
+        "tags": ["Match"],
+        "summary": "Get Match By Id",
+        "operationId": "getMatchById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],        
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Match"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/matches/{id}/subMatches": {
+      "post": {
+        "tags": ["Match"],
+        "summary": "Add SubMatch to Match By Id",
+        "operationId": "AddSubMatch",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubMatchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Match"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -506,6 +855,16 @@
           }
         }
       },
+      "UpdateSeasonPlayersRequest": {
+        "properties": {
+          "playerIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
       "CreateSeasonRequest": {
         "type": "object",
         "properties": {
@@ -514,6 +873,12 @@
           },
           "description": {
             "type": "string"
+          },
+          "playerIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -525,6 +890,25 @@
           },
           "description": {
             "type": "string"
+          }
+        }
+      },
+      "UpdateSeasonStatusRequest": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateSessionPlayersRequest": {
+        "type": "object",
+        "properties": {
+          "playerIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -573,6 +957,31 @@
           }
         }
       },
+      "SubMatchTeamStatisticsRequest": {
+        "type": "object",
+        "properties": {
+          "team": {
+            "type": "string"
+          },
+          "goal": {
+            "type": "number"
+          },
+          "redCard": {
+            "type": "number"
+          }
+        }
+      },
+      "CreateSubMatchRequest": {
+        "type": "object",
+        "properties": {
+          "home": {
+            "$ref": "#/components/schemas/SubMatchTeamStatisticsRequest"
+          },
+          "away": {
+            "$ref": "#/components/schemas/SubMatchTeamStatisticsRequest"
+          }
+        }
+      },
       "GetPlayersResponse": {
         "type": "object",
         "allOf": [
@@ -584,6 +993,23 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/Player"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "GetMatchesResponse": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseListResponse",
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Match"
                 }
               }
             }
@@ -628,6 +1054,12 @@
           "description": {
             "type": "string"
           },
+          "players": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Player"
+            }
+          },
           "creatorId": {
             "type": "string"
           },
@@ -656,6 +1088,118 @@
           },
           "nickname": {
             "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        }
+      },
+      "SubMatchTeamStatistics": {
+        "type": "object",
+        "properties": {
+          "team": {
+            "type": "string"
+          },
+          "goal": {
+            "type": "number"
+          },
+          "redCard": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        }
+      },
+      "SubMatch": {
+        "type": "object",
+        "properties": {
+          "home": {
+            "$ref": "#/components/schemas/SubMatchTeamStatistics"
+          },
+          "away": {
+            "$ref": "#/components/schemas/SubMatchTeamStatistics"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        }
+      },
+      "Match": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "seasonId": {
+            "type": "string"
+          },
+          "homePlayer": {
+            "$ref": "#/components/schemas/Player"
+          },
+          "awayPlayer": {
+            "$ref": "#/components/schemas/Player"
+          },
+          "subMatches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubMatch"
+            }
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        }
+      },
+      "StandingTeam": {
+        "type": "object",
+        "properties": {
+          "player": {
+            "$ref": "#/components/schemas/Player"
+          },
+          "totalPoint": {
+            "type": "number"
+          },
+          "totalGoal": {
+            "type": "number"
+          },
+          "totalRedCard": {
+            "type": "number"
+          },
+          "totalWin": {
+            "type": "number"
+          },
+          "totalLose": {
+            "type": "number"
+          },
+          "totalDraw": {
+            "type": "number"
+          }
+        }
+      },
+      "Standing": {
+        "type": "object",
+        "properties": {
+          "seasonId": {
+            "type": "string"
+          },
+          "standingTeams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandingTeam"
+            }
           },
           "createdAt": {
             "type": "string"

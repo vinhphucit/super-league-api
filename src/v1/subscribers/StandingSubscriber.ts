@@ -28,13 +28,13 @@ export default class PmsPropertySubscriber {
     const awayPlayer = newData.awayPlayer;
 
     const oldDataResult = this.calculateResultOfCompetitors(oldData.subMatches);
-    const newDataResult = this.calculateResultOfCompetitors(oldData.subMatches);
+    const newDataResult = this.calculateResultOfCompetitors(newData.subMatches);
 
     const foundStanding = await standingService.getBySeasonId(newData.seasonId);
     if (foundStanding != null) {
       for (var team of foundStanding.standingTeams) {
         if (team.player.id === homePlayer.id) {
-          team.totalPoint -=
+          team.totalPoint = team.totalPoint -
             this.resultToPointHomeAway(oldDataResult)[0] +
             this.resultToPointHomeAway(newDataResult)[0];
           team.totalGoal =
@@ -44,7 +44,8 @@ export default class PmsPropertySubscriber {
           team.totalRedCard =
             newData.subMatches[newData.subMatches.length - 1].home.redCard;
         } else if (team.player.id === awayPlayer.id) {
-          team.totalPoint -=
+          team.totalPoint =
+            team.totalPoint -
             this.resultToPointHomeAway(oldDataResult)[1] +
             this.resultToPointHomeAway(newDataResult)[1];
           team.totalGoal =

@@ -1,13 +1,13 @@
 import { IMatch } from "../dao/Match";
 import { IPlayer } from "../dao/Player";
-import { MatchStatisticsDomain } from "./SubMatchStatisticsDomain";
+import { SubMatchDomain } from "./SubMatchDomain";
 import { PlayerDomain } from "./PlayerDomain";
 
 export class MatchDomain {
   id: string;
   homePlayer: PlayerDomain;
   awayPlayer: PlayerDomain;
-  subMatches: MatchStatisticsDomain[];
+  subMatches: SubMatchDomain[];
   createdAt: Date;
   updatedAt: Date;
   constructor();
@@ -18,7 +18,7 @@ export class MatchDomain {
     this.homePlayer = new PlayerDomain(result.homePlayer);
     this.awayPlayer = new PlayerDomain(result.awayPlayer);
     this.subMatches = result.subMatches.map(
-      (i) => new MatchStatisticsDomain(i)
+      (i) => new SubMatchDomain(i)
     );
 
     this.createdAt = result.createdAt;

@@ -65,12 +65,15 @@ export class MatchService {
   ): Promise<IMatch> {
     var foundMatch = await this.getById(matchId);
 
-    const createdSubMatch = await this.subMatchService.create(rq);
+    const createdSubMatch = await this.subMatchService.create(foundMatch, rq);
 
     foundMatch.subMatches.push(createdSubMatch);
     var updatedMatch = await this.repo.updateById(matchId, foundMatch);
 
-    new EventDispatcher().dispatch(Events.standing.subMatchAdded, new SubMatchAddedArgument(foundMatch, updatedMatch));
+    new EventDispatcher().dispatch(
+      Events.standing.subMatchAdded,
+      new SubMatchAddedArgument(foundMatch, updatedMatch)
+    );
 
     return updatedMatch;
   }

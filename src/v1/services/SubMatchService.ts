@@ -9,12 +9,14 @@ import { UpdateSubMatchRequest } from "../models/dto/request/submatch/UpdateSubM
 import { SubMatchRepository } from "../repositories/SubMatchRepository";
 import { switchNull } from "../utils/StringUtils";
 import { ISubMatchTeamStatistics } from "../models/dao/SubMatchTeamStatistics";
+import { IMatch } from "../models/dao/Match";
 
 @Service()
 export class SubMatchService {
   constructor(private readonly repo: SubMatchRepository) {}
 
   public async create(
+    match: IMatch,
     rq: CreateSubMatchRequest
   ): Promise<ISubMatch> {
 
@@ -29,6 +31,8 @@ export class SubMatchService {
       redCard: rq.away.redCard,
     };
     let matchStatistics: Partial<ISubMatch> = {
+      matchId: match.id,
+      seasonId: match.seasonId,
       home,
       away,
     };

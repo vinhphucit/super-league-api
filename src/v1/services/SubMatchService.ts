@@ -63,13 +63,13 @@ export class SubMatchService {
     if (rq.home != null) {
       entity.home.team = switchNull(rq.home.team, entity.home.team);
       entity.home.goal = switchNull(rq.home.goal, entity.home.goal);
-      entity.home.redCard = switchNull(rq.home.goal, entity.home.redCard);
+      entity.home.redCard = switchNull(rq.home.redCard, entity.home.redCard);
     }
 
     if (rq.away != null) {
       entity.away.team = switchNull(rq.away.team, entity.away.team);
       entity.away.goal = switchNull(rq.away.goal, entity.away.goal);
-      entity.away.redCard = switchNull(rq.away.goal, entity.away.redCard);
+      entity.away.redCard = switchNull(rq.away.redCard, entity.away.redCard);
     }
  
     return await this.repo.updateById(id, entity);

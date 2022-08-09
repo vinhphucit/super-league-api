@@ -26,12 +26,12 @@ export class MatchRouter extends CommonRoutesConfig {
       controller.addSubMatches.bind(controller)
     );
     this.router.put(
-      `/:id/subMatches/subMatchId`,
-      controller.addSubMatches.bind(controller)
+      `/:id/subMatches/:subMatchId`,
+      controller.updateSubMatch.bind(controller)
     );
     this.router.delete(
-      `/:id/subMatches/subMatchId`,
-      controller.addSubMatches.bind(controller)
+      `/:id/subMatches/:subMatchId`,
+      controller.deleteSubMatch.bind(controller)
     );
   }
 }

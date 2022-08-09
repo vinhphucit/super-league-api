@@ -22,7 +22,9 @@ function genRandomString(length) {
 }
 exports.genRandomString = genRandomString;
 function switchNull(val1, val2) {
-    return val1 ? val1 : val2;
+    if (val1 == null || val1 == undefined)
+        return val2;
+    return val1;
 }
 exports.switchNull = switchNull;
 function standardizePath(val) {

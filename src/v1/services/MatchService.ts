@@ -75,7 +75,7 @@ export class MatchService {
 
     new EventDispatcher().dispatch(
       Events.standing.subMatchAdded,
-      new SubMatchAddedArgument(foundMatch, updatedMatch)
+      new SubMatchAddedArgument(foundMatch, createdSubMatch)
     );
 
     return updatedMatch;
@@ -87,6 +87,7 @@ export class MatchService {
     rq: UpdateSubMatchRequest
   ): Promise<IMatch> {
     var foundMatch = await this.getById(matchId);
+
     const foundSubMatch = foundMatch.subMatches.find(
       (value) => value.id === subMatchId
     );
@@ -98,17 +99,17 @@ export class MatchService {
       rq
     );
 
-    const oldMatch = { ...foundMatch } as IMatch;
-    for (var sm of foundMatch.subMatches) {
-      if (sm.id === subMatchId) {
-        sm = updatedSubMatch;
+    for (var i = 0; i < foundMatch.subMatches.length; i++) {
+      
+      if (foundMatch.subMatches[i].id === subMatchId) {
+        foundMatch.subMatches[i] = updatedSubMatch;
       }
     }
     var updatedMatch = await this.repo.updateById(matchId, foundMatch);
 
     new EventDispatcher().dispatch(
       Events.standing.subMatchUpdated,
-      new SubMatchUpdatedArgument(oldMatch, updatedSubMatch)
+      new SubMatchUpdatedArgument(foundMatch, foundSubMatch)
     );
 
     return updatedMatch;
@@ -125,18 +126,17 @@ export class MatchService {
     if (foundSubMatch == null)
       throw new BadRequestException(`This match doesn't contain submatch`);
 
-    const oldMatch = { ...foundMatch } as IMatch;
     foundMatch.subMatches = foundMatch.subMatches.filter(
       (value) => value.id !== subMatchId
     );
-    
-    const updatedSubMatch = await this.subMatchService.deleteById(subMatchId);
+
+    const removedSubMatch = await this.subMatchService.deleteById(subMatchId);
 
     var updatedMatch = await this.repo.updateById(matchId, foundMatch);
 
     new EventDispatcher().dispatch(
       Events.standing.subMatchRemoved,
-      new SubMatchRemovedArgument(oldMatch, updatedSubMatch)
+      new SubMatchRemovedArgument(foundMatch, removedSubMatch)
     );
 
     return updatedMatch;

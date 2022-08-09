@@ -55,7 +55,6 @@ export class MatchController {
     }
   }
 
-
   public async addSubMatches(req: Request, res: Response, next: NextFunction) {
     try {
       const request: CreateSubMatchRequest = req.body;

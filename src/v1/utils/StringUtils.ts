@@ -23,7 +23,10 @@ export function genRandomString(length: number) {
 }
 
 export function switchNull(val1: any, val2: any): any {
-    return val1 ? val1 : val2;
+    if(val1==null || val1 == undefined)
+    return val2;
+    return val1;
+    
 }
 
 export function standardizePath(val: string):string{

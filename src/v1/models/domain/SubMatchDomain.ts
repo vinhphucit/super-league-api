@@ -4,6 +4,7 @@ import { PlayerDomain } from "./PlayerDomain";
 import { SubMatchTeamStatisticsDomain } from "./SubMatchTeamStatisticsDomain";
 
 export class SubMatchDomain {
+  id: string;
   matchId: string;
   seasonId: string;
   home: SubMatchTeamStatisticsDomain;
@@ -12,6 +13,7 @@ export class SubMatchDomain {
   constructor(result: ISubMatch);
   constructor(result?: ISubMatch) {
     if (!result) return;
+    this.id = result.id;
     this.matchId = result.matchId;
     this.seasonId = result.seasonId;
     this.home = new SubMatchTeamStatisticsDomain(result.home);

@@ -14,173 +14,198 @@ import events from "./Events";
 export default class PmsPropertySubscriber {
   @On(events.standing.init)
   public async onStandingInit(arg: StandingInitArgument) {
-    const standingService = Container.get(StandingService);
-    await standingService.initSeasonStanding(arg.season.id, arg.players);
+    try {
+      const standingService = Container.get(StandingService);
+      await standingService.initSeasonStanding(arg.season.id, arg.players);
+    } catch (error) {
+      Logger.error("error in init");
+      Logger.error(error);
+    }
   }
 
   @On(events.standing.subMatchAdded)
   public async onStandingUpdateWhenSubMatchAdded(arg: SubMatchAddedArgument) {
-    const standingService = Container.get(StandingService);
-    const oldData = arg.previousMatch;
-    const newData = arg.newMatch;
+    try {
+      const standingService = Container.get(StandingService);
+      const match = arg.match;
+      const newSubMatchData = arg.newSubMatch;
 
-    if (newData.subMatches == null || newData.subMatches.length == 0) return;
+      if (newSubMatchData == null) return;
 
-    const homePlayer = newData.homePlayer;
-    const awayPlayer = newData.awayPlayer;
+      const homePlayer = newSubMatchData.home.player;
+      const awayPlayer = newSubMatchData.away.player;
 
-    const oldDataResult = this.calculateResultOfCompetitors(oldData.subMatches);
-    const newDataResult = this.calculateResultOfCompetitors(newData.subMatches);
-
-    const foundStanding = await standingService.getBySeasonId(newData.seasonId);
-    if (foundStanding != null) {
-      for (var team of foundStanding.standingTeams) {
-        if (team.player.id === homePlayer.id) {
-          team.totalPoint =
-            team.totalPoint -
-            this.resultToPointHomeAway(oldDataResult)[0] +
-            this.resultToPointHomeAway(newDataResult)[0];
-          team.totalGoal +=
-            newData.subMatches[newData.subMatches.length - 1].home.goal;
-          team.totalGoalAgainst +=
-            newData.subMatches[newData.subMatches.length - 1].away.goal;
-          team.totalRedCard +=
-            newData.subMatches[newData.subMatches.length - 1].home.redCard;
-        } else if (team.player.id === awayPlayer.id) {
-          team.totalPoint =
-            team.totalPoint -
-            this.resultToPointHomeAway(oldDataResult)[1] +
-            this.resultToPointHomeAway(newDataResult)[1];
-          team.totalGoal +=
-            newData.subMatches[newData.subMatches.length - 1].away.goal;
-          team.totalGoalAgainst +=
-            newData.subMatches[newData.subMatches.length - 1].home.goal;
-          team.totalRedCard +=
-            newData.subMatches[newData.subMatches.length - 1].away.redCard;
-        }
-      }
-      foundStanding.standingTeams = this.sortStanding(
-        foundStanding.standingTeams
+      const oldDataResult = this.calculateResultOfCompetitors(
+        match.subMatches.filter((value) => value.id !== newSubMatchData.id)
       );
-      await standingService.save(foundStanding);
+      const newDataResult = this.calculateResultOfCompetitors(match.subMatches);
+
+      const foundStanding = await standingService.getBySeasonId(
+        newSubMatchData.seasonId
+      );
+      if (foundStanding != null) {
+        for (var team of foundStanding.standingTeams) {
+          if (team.player.id === homePlayer.id) {
+            team.totalPoint =
+              team.totalPoint -
+              this.resultToPointHomeAway(oldDataResult)[0] +
+              this.resultToPointHomeAway(newDataResult)[0];
+            team.totalGoal +=
+              match.subMatches[match.subMatches.length - 1].home.goal;
+            team.totalGoalAgainst +=
+              match.subMatches[match.subMatches.length - 1].away.goal;
+            team.totalRedCard +=
+              match.subMatches[match.subMatches.length - 1].home.redCard;
+          } else if (team.player.id === awayPlayer.id) {
+            team.totalPoint =
+              team.totalPoint -
+              this.resultToPointHomeAway(oldDataResult)[1] +
+              this.resultToPointHomeAway(newDataResult)[1];
+            team.totalGoal +=
+              match.subMatches[match.subMatches.length - 1].away.goal;
+            team.totalGoalAgainst +=
+              match.subMatches[match.subMatches.length - 1].home.goal;
+            team.totalRedCard +=
+              match.subMatches[match.subMatches.length - 1].away.redCard;
+          }
+        }
+        foundStanding.standingTeams = this.sortStanding(
+          foundStanding.standingTeams
+        );
+        await standingService.save(foundStanding);
+      }
+    } catch (error) {
+      Logger.error("error in subMatchAdded");
+      Logger.error(error);
     }
   }
   @On(events.standing.subMatchUpdated)
   public async onStandingUpdateWhenSubMatchUpdated(
     arg: SubMatchUpdatedArgument
   ) {
-    const standingService = Container.get(StandingService);
-    const oldData = arg.previousMatch;
-    const newData = { ...arg.previousMatch };
-    const newSubMatch = arg.updatedSubMatch;
-    var oldSubMatch: ISubMatch = null;
-    for (var sm of oldData.subMatches) {
-      if (sm.id === arg.updatedSubMatch.id) {
-        oldSubMatch = sm;
-      }
-    }
-    for (var sm of newData.subMatches) {
-      if (sm.id === arg.updatedSubMatch.id) {
-        sm = arg.updatedSubMatch;
-      }
-    }
+    try {
+      const standingService = Container.get(StandingService);
+      const updatedMatch = arg.updatedMatch;
+      const oldSubMatch = arg.oldSubMatch;
 
-    if (newData.subMatches == null || newData.subMatches.length == 0) return;
-
-    const homePlayer = newData.homePlayer;
-    const awayPlayer = newData.awayPlayer;
-
-    const oldDataResult = this.calculateResultOfCompetitors(oldData.subMatches);
-    const newDataResult = this.calculateResultOfCompetitors(newData.subMatches);
-
-    const foundStanding = await standingService.getBySeasonId(newData.seasonId);
-    if (foundStanding != null) {
-      for (var team of foundStanding.standingTeams) {
-        if (team.player.id === homePlayer.id) {
-          team.totalPoint =
-            team.totalPoint -
-            this.resultToPointHomeAway(oldDataResult)[0] +
-            this.resultToPointHomeAway(newDataResult)[0];
-          team.totalGoal =
-            team.totalGoal - oldSubMatch.home.goal + newSubMatch.home.goal;
-          team.totalGoalAgainst =
-            team.totalGoalAgainst -
-            oldSubMatch.away.goal +
-            newSubMatch.away.goal;
-          team.totalRedCard =
-            team.totalRedCard -
-            oldSubMatch.home.redCard +
-            newSubMatch.home.redCard;
-        } else if (team.player.id === awayPlayer.id) {
-          team.totalPoint =
-            team.totalPoint -
-            this.resultToPointHomeAway(oldDataResult)[1] +
-            this.resultToPointHomeAway(newDataResult)[1];
-          team.totalGoal =
-            team.totalGoal - oldSubMatch.away.goal + newSubMatch.away.goal;
-          team.totalGoalAgainst =
-            team.totalGoalAgainst -
-            oldSubMatch.home.goal +
-            newSubMatch.home.goal;
-          team.totalRedCard =
-            team.totalRedCard -
-            oldSubMatch.away.redCard +
-            newSubMatch.away.redCard;
-        }
-      }
-      foundStanding.standingTeams = this.sortStanding(
-        foundStanding.standingTeams
+      const oldSubMatches = updatedMatch.subMatches.filter(
+        (value) => value.id !== oldSubMatch.id
       );
-      await standingService.save(foundStanding);
+      const newSubMatch = updatedMatch.subMatches.find(
+        (value) => value.id == oldSubMatch.id
+      );
+      oldSubMatches.push(oldSubMatch);
+
+      const homePlayer = oldSubMatch.home.player;
+      const awayPlayer = oldSubMatch.away.player;
+
+      const oldDataResult = this.calculateResultOfCompetitors(oldSubMatches);
+      const newDataResult = this.calculateResultOfCompetitors(
+        updatedMatch.subMatches
+      );
+
+      const foundStanding = await standingService.getBySeasonId(
+        oldSubMatch.seasonId
+      );
+      if (foundStanding != null) {
+        for (var team of foundStanding.standingTeams) {
+          if (team.player.id === homePlayer.id) {
+            team.totalPoint =
+              team.totalPoint -
+              this.resultToPointHomeAway(oldDataResult)[0] +
+              this.resultToPointHomeAway(newDataResult)[0];
+            team.totalGoal =
+              team.totalGoal - oldSubMatch.home.goal + newSubMatch.home.goal;
+            team.totalGoalAgainst =
+              team.totalGoalAgainst -
+              oldSubMatch.away.goal +
+              newSubMatch.away.goal;
+            team.totalRedCard =
+              team.totalRedCard -
+              oldSubMatch.home.redCard +
+              newSubMatch.home.redCard;
+          } else if (team.player.id === awayPlayer.id) {
+            team.totalPoint =
+              team.totalPoint -
+              this.resultToPointHomeAway(oldDataResult)[1] +
+              this.resultToPointHomeAway(newDataResult)[1];
+            team.totalGoal =
+              team.totalGoal - oldSubMatch.away.goal + newSubMatch.away.goal;
+            team.totalGoalAgainst =
+              team.totalGoalAgainst -
+              oldSubMatch.home.goal +
+              newSubMatch.home.goal;
+            team.totalRedCard =
+              team.totalRedCard -
+              oldSubMatch.away.redCard +
+              newSubMatch.away.redCard;
+          }
+        }
+        foundStanding.standingTeams = this.sortStanding(
+          foundStanding.standingTeams
+        );
+        await standingService.save(foundStanding);
+      }
+    } catch (error) {
+      Logger.error("error in subMatchUpdated");
+      Logger.error(error);
     }
   }
   @On(events.standing.subMatchRemoved)
   public async onStandingUpdateWhenSubMatchRemoved(
     arg: SubMatchRemovedArgument
   ) {
-    const standingService = Container.get(StandingService);
-    const oldData = arg.previousMatch;
-    const newData = { ...arg.previousMatch };
-    const removedSubMatch = arg.removedSubMatch;
-    var oldSubMatch: ISubMatch = null;
+    try {
+      const standingService = Container.get(StandingService);
+      var oldSubMatches = [...arg.updatedMatch.subMatches];
+      oldSubMatches.push(arg.removedSubMatch);
 
-    newData.subMatches = newData.subMatches.filter((value) => {
-      value.id !== removedSubMatch.id;
-    });
+      const newSubMatches = arg.updatedMatch.subMatches;
 
-    const homePlayer = oldData.homePlayer;
-    const awayPlayer = oldData.awayPlayer;
+      const removedSubMatch = arg.removedSubMatch;
+      var oldSubMatch: ISubMatch = null;
 
-    const oldDataResult = this.calculateResultOfCompetitors(oldData.subMatches);
-    const newDataResult = this.calculateResultOfCompetitors(newData.subMatches);
+      const homePlayer = arg.removedSubMatch.home.player;
+      const awayPlayer = arg.removedSubMatch.away.player;
 
-    const foundStanding = await standingService.getBySeasonId(newData.seasonId);
-    if (foundStanding != null) {
-      for (var team of foundStanding.standingTeams) {
-        if (team.player.id === homePlayer.id) {
-          team.totalPoint =
-            team.totalPoint -
-            this.resultToPointHomeAway(oldDataResult)[0] +
-            this.resultToPointHomeAway(newDataResult)[0];
-          team.totalGoal = team.totalGoal - removedSubMatch.home.goal;
-          team.totalGoalAgainst =
-            team.totalGoalAgainst - removedSubMatch.away.goal;
-          team.totalRedCard = team.totalRedCard - removedSubMatch.home.redCard;
-        } else if (team.player.id === awayPlayer.id) {
-          team.totalPoint =
-            team.totalPoint -
-            this.resultToPointHomeAway(oldDataResult)[1] +
-            this.resultToPointHomeAway(newDataResult)[1];
-          team.totalGoal = team.totalGoal - removedSubMatch.away.goal;
-          team.totalGoalAgainst =
-            team.totalGoalAgainst - removedSubMatch.home.goal;
-          team.totalRedCard = team.totalRedCard - removedSubMatch.away.redCard;
-        }
-      }
-      foundStanding.standingTeams = this.sortStanding(
-        foundStanding.standingTeams
+      const oldDataResult = this.calculateResultOfCompetitors(oldSubMatches);
+      const newDataResult = this.calculateResultOfCompetitors(newSubMatches);
+
+      const foundStanding = await standingService.getBySeasonId(
+        arg.removedSubMatch.seasonId
       );
-      await standingService.save(foundStanding);
+      if (foundStanding != null) {
+        for (var team of foundStanding.standingTeams) {
+          if (team.player.id === homePlayer.id) {
+            team.totalPoint =
+              team.totalPoint -
+              this.resultToPointHomeAway(oldDataResult)[0] +
+              this.resultToPointHomeAway(newDataResult)[0];
+            team.totalGoal = team.totalGoal - removedSubMatch.home.goal;
+            team.totalGoalAgainst =
+              team.totalGoalAgainst - removedSubMatch.away.goal;
+            team.totalRedCard =
+              team.totalRedCard - removedSubMatch.home.redCard;
+          } else if (team.player.id === awayPlayer.id) {
+            team.totalPoint =
+              team.totalPoint -
+              this.resultToPointHomeAway(oldDataResult)[1] +
+              this.resultToPointHomeAway(newDataResult)[1];
+            team.totalGoal = team.totalGoal - removedSubMatch.away.goal;
+            team.totalGoalAgainst =
+              team.totalGoalAgainst - removedSubMatch.home.goal;
+            team.totalRedCard =
+              team.totalRedCard - removedSubMatch.away.redCard;
+          }
+        }
+        foundStanding.standingTeams = this.sortStanding(
+          foundStanding.standingTeams
+        );
+        await standingService.save(foundStanding);
+      }
+    } catch (error) {
+      Logger.error("error in subMatchRemoved");
+      Logger.error(error);
     }
   }
   private sortStanding(standingTeams: IStandingTeam[]): IStandingTeam[] {
@@ -230,7 +255,7 @@ export default class PmsPropertySubscriber {
     var homeWin = 0,
       awayWin = 0;
     //calculate temp point before new match
-    if (subMatches != null || subMatches.length > 0) {
+    if (subMatches != null && subMatches.length > 0) {
       for (const m of subMatches) {
         const homeGoal = m.home.goal;
         const awayGoal = m.away.goal;

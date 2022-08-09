@@ -4,5 +4,5 @@ import { IPlayer } from "../../models/dao/Player";
 import { ISeason } from "../../models/dao/Season";
 
 export class SubMatchRemovedArgument {
-  constructor(public previousMatch: IMatch, public removedSubMatch: ISubMatch) {}
+  constructor(public updatedMatch: IMatch, public removedSubMatch: ISubMatch) {}
 }

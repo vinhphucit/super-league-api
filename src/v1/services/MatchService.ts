@@ -17,9 +17,13 @@ import { SubMatchAddedArgument } from "../subscribers/arguments/SubMatchAddedArg
 import { UpdateSubMatchRequest } from "../models/dto/request/submatch/UpdateSubMatchRequest";
 import { SubMatchUpdatedArgument } from "../subscribers/arguments/SubMatchUpdatedArgument";
 import { SubMatchRemovedArgument } from "../subscribers/arguments/SubMatchRemovedArgument";
+import { SeasonService } from "./SeasonService";
+import { SeasonStatus } from "../enums/SeasonStatus";
 
 @Service()
 export class MatchService {
+  @Inject()
+  seasonService: SeasonService;
   @Inject()
   subMatchService: SubMatchService;
   constructor(private readonly repo: MatchRepository) {}
@@ -67,6 +71,9 @@ export class MatchService {
     rq: CreateSubMatchRequest
   ): Promise<IMatch> {
     var foundMatch = await this.getById(matchId);
+    const season = await this.seasonService.getById(foundMatch.seasonId);
+    if (season.status !== SeasonStatus.ON_GOING)
+      throw new BadRequestException("Season not on_going");
 
     const createdSubMatch = await this.subMatchService.create(foundMatch, rq);
 
@@ -87,7 +94,9 @@ export class MatchService {
     rq: UpdateSubMatchRequest
   ): Promise<IMatch> {
     var foundMatch = await this.getById(matchId);
-
+    const season = await this.seasonService.getById(foundMatch.seasonId);
+    if (season.status !== SeasonStatus.ON_GOING)
+      throw new BadRequestException("Season not on_going");
     const foundSubMatch = foundMatch.subMatches.find(
       (value) => value.id === subMatchId
     );
@@ -100,7 +109,6 @@ export class MatchService {
     );
 
     for (var i = 0; i < foundMatch.subMatches.length; i++) {
-      
       if (foundMatch.subMatches[i].id === subMatchId) {
         foundMatch.subMatches[i] = updatedSubMatch;
       }
@@ -120,6 +128,10 @@ export class MatchService {
     subMatchId: string
   ): Promise<IMatch> {
     var foundMatch = await this.getById(matchId);
+    const season = await this.seasonService.getById(foundMatch.seasonId);
+    if (season.status !== SeasonStatus.ON_GOING)
+      throw new BadRequestException("Season not on_going");
+
     const foundSubMatch = foundMatch.subMatches.find(
       (value) => value.id === subMatchId
     );

@@ -74,7 +74,7 @@ export class MatchService {
     var updatedMatch = await this.repo.updateById(matchId, foundMatch);
 
     new EventDispatcher().dispatch(
-      Events.standing.subMatchUpdated,
+      Events.standing.subMatchAdded,
       new SubMatchAddedArgument(foundMatch, updatedMatch)
     );
 
